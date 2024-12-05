@@ -1,5 +1,6 @@
+// RecordProvider.tsx
 import { ReactNode, useState } from "react";
-import { recordContext } from "./recordContext";
+import { RecordContext } from "./RecordContext"; 
 import { IRecord } from "../types/record.types";
 import { records as data } from "../data/records";
 
@@ -10,42 +11,30 @@ interface RecordProviderProps {
 export const RecordProvider = ({ children }: RecordProviderProps) => {
   const [records, setRecords] = useState<IRecord[]>(data);
 
-  // adding
-  const addNewRecord = (record: IRecord) => {
-    setRecords((prev) => {
-      return [...prev, record];
-    });
+  const addRecord = (record: IRecord) => {
+    setRecords((prev) => [...prev, record]);
   };
 
-  // deleting
   const deleteRecord = (id: number) => {
-    setRecords((prev) => {
-      return prev.filter((record) => record.id !== id);
-    });
+    setRecords((prev) => prev.filter((record) => record.id !== id));
   };
 
-  // updating
   const updateRecord = (newRecord: IRecord) => {
-    setRecords((prev) => {
-      return prev.map((record) => {
-        if (record.id === newRecord.id) {
-          return newRecord;
-        } else {
-          return record;
-        }
-      });
-    });
+    setRecords((prev) =>
+      prev.map((record) => (record.id === newRecord.id ? newRecord : record))
+    );
   };
 
   const values = {
     records,
-    setRecords,
-    addNewRecord,
+    addRecord,
     deleteRecord,
     updateRecord,
   };
 
   return (
-    <recordContext.Provider value={values}>{children}</recordContext.Provider>
+    <RecordContext.Provider value={values}>
+      {children}
+    </RecordContext.Provider>
   );
 };
